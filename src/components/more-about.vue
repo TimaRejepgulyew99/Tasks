@@ -78,6 +78,9 @@
 </template>
 <script>
 export default {
+  mounted(){
+    
+  },
   data() {
     return {
       id: this.$route.params.taskId,
@@ -101,7 +104,6 @@ export default {
       this.$store.dispatch("remakeTask", this.thatTask);
     },
     remakeTask() {
-      console.log("work");
       this.action();
       this.$router.push("/");
     },
@@ -115,7 +117,6 @@ export default {
         return this.tag === tag;
       });
       if (!isSameTag) {
-        console.log(isSameTag);
         this.thatTask.tags.unshift(this.tag);
         this.tag = "test";
         this.error = "";
@@ -124,7 +125,6 @@ export default {
       }
     },
     deleteTag(ind) {
-      console.log(ind);
       this.$delete(this.thatTask.tags, ind);
     }
   }

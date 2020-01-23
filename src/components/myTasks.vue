@@ -1,94 +1,89 @@
 <template>
-  <div class="container">
-    <table class="table text-muted border-bottom border-gray">
-      <tr>
-        <td>
-          <strong class="d-block border col-auto rounded pt-2 pb-2 m-3">#</strong>
-        </td>
-        <td>
-          <p class="media-body m-4">
-            <strong class="d-block align-content-center text-gray-dark">Заголовок</strong>
-          </p>
-        </td>
-        <td>
-          <p class="media-body m-4">
-            <strong class="d-block align-content-center text-gray-dark">Описание</strong>
-          </p>
-        </td>
-        <td>
-          <p class="media-body m-4">
-            <strong class="d-block align-content-center text-gray-dark">статус</strong>
-          </p>
-        </td>
-        <td>
+  <div class>
+    <div class="text-muted">
+      <div class="row mb-3">
+        <div class="col-12 bg-white shadow-sm pt-2 pb-2 mr-auto">
+          <label class="mr-sm-2 col-12" for="inlineFormCustomSelect">Искать по тэгу</label>
+          <div class="form-group d-flex col-6">
+            <input type="text" class="form-control" />
+            <input value="искать" class="btn btn-dark" type="button" />
+            <router-link class="btn btn-outline-success col-6 ml-auto " to="/create-tasks">
+              <a class>Создать задачу</a>
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-1">
+          <div class="d-block col-auto rounded pt-2 pb-2 m-3">#</div>
+        </div>
+        <div class="col-2">
+          <div class="media-body m-4">
+            <div class="d-block align-content-center text-gray-dark">Заголовок</div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="media-body m-4">
+            <div class="d-block align-content-center text-gray-dark">Описание</div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="media-body m-4">
+            <div class="d-block align-content-center text-gray-dark">статус</div>
+          </div>
+        </div>
+        <div class="col-4">
           <router-link class="btn btn-outline-success m-4" to="/create-tasks">
             <a class>Создать задачу</a>
           </router-link>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="5">
-          <label class="mr-sm-2" for="inlineFormCustomSelect">выбрать Тэг задачи</label>
-          <select
-            v-model="filterTag"
-            class="custom-select mr-sm-2 mb-5"
-            id="inlineFormCustomSelect"
-          >
-            <option value="null">все типы тегов</option>
+        </div>
+      </div>
 
-            <option value="test">Тест</option>
-            <option value="mest">Мест</option>
-            <option value="rest">Рест</option>
-          </select>
-        </td>
-      </tr>
+      <div class="bg-white mb-3 shadow-sm row" v-for="(task, index) in tasks" :key="index">
+        <div class="col-1">
+          <div class="d-block col-auto rounded pt-2 pb-2 m-3">{{ index+1}}</div>
+        </div>
 
-      <tr v-for="(task, index) in filterTasks" :key="index">
-        <td>
-          <strong class="d-block border col-auto rounded pt-2 pb-2 m-3">{{ index+1}}</strong>
-        </td>
-        <td>
-          <p class="media-body m-4">
-            <strong class="d-block align-content-center text-gray-dark short-form">{{ task.header }}</strong>
-          </p>
-        </td>
-        <td>
-          <p class="media-body m-4">
-            <strong
-              class="d-block align-content-center text-gray-dark short-form"
-            >{{ task.description }}</strong>
-          </p>
-        </td>
-        <td>
-          <p class="media-body m-4">
-            <strong class="d-block align-content-center text-gray-dark">{{ task.status }}</strong>
-          </p>
-        </td>
-        <td>
+        <div class="col-2">
+          <div class="d-block short-form col-auto rounded pt-2 pb-2 m-3">{{ task.header }}</div>
+        </div>
+        <div class="col-3">
+          <div class="d-block short-form col-auto rounded pt-2 pb-2 m-3">{{ task.description }}</div>
+        </div>
+
+        <div class="col-2">
+          <div class="d-block col-auto rounded pt-2 pb-2 m-3">{{ task.deadLineTask }}</div>
+        </div>
+        <div class="col-4">
           <router-link :to="{name:'more-about',params:{taskId:task.id}}">
-            <a class="btn btn-outline-success m-2">Подробнее</a>
+            <a class="btn btn-outline-success m-4">Подробнее</a>
           </router-link>
-        </td>
-      </tr>
+        </div>
+      </div>
       <slot></slot>
-    </table>
+    </div>
   </div>
 </template>
 <script>
+import auxios from 'axios'
 export default {
+  mounted(){
+     auxios
+      .get('https://192.168.4.99:32772/api/task')
+      .then(response => (this.tasks = response.data))
+      .then(response=>(console.log(response[0])));
+  },
   data() {
     return {
-      filterTag: 'null',
-      filterTasks:this.$store.getters.tasks,
+      filterTag: "null",
+      filterTasks: this.$store.getters.tasks,
       id: "",
-      tasks: this.$store.getters.tasks,
-      description: true
+      tasks: null
     };
   },
   watch: {
     filterTag: function(val) {
-       
-      if (val != 'null') {
+      if (val != "null") {
         this.filterTasks = this.tasks.filter(task => {
           for (let tag in task.tags) {
             if (task.tags[tag] == val) {
@@ -96,11 +91,15 @@ export default {
             }
           }
         });
-      }
-      else{
-        this.filterTasks = this.tasks
+      } else {
+        this.filterTasks = this.tasks;
       }
     }
   }
 };
 </script>
+<style lang="css">
+.bg--purple {
+  background: #f4f6fc;
+}
+</style>

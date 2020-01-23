@@ -7,27 +7,29 @@ import moreAbout from './components/more-about'
 import store from './store'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
- 
+import VueSidebarMenu from 'vue-sidebar-menu'
+import auxios from 'axios'
+Vue.use(VueSidebarMenu)
 Vue.use(VueRouter)
-  const router = new VueRouter({
-    mode:'history',
-    routes: [
-      {
-        path: '/',
-        name: 'my-tasks',
-        component: myTasks
-      },
-      {
-        path: '/create-tasks',
-        name: 'create-tasks',
-        component: createTasks,
-      },
-      {
-        path: '/more-about/:taskId',
-        name: 'more-about',
-        component: moreAbout
-      },
-    ]
+const router = new VueRouter({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'my-tasks',
+      component: myTasks
+    },
+    {
+      path: '/create-tasks',
+      name: 'create-tasks',
+      component: createTasks,
+    },
+    {
+      path: '/more-about/:taskId',
+      name: 'more-about',
+      component: moreAbout
+    },
+  ]
 })
 new Vue({
   el: '#app',

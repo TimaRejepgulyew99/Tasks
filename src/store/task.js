@@ -2,14 +2,13 @@ function recordData(tasks) {
     localStorage.setItem("tasks", JSON.stringify(tasks))
     tasks = JSON.parse(localStorage.getItem('tasks'))
 }
+
 export default {
     state: {
-        tasks: JSON.parse(localStorage.getItem('tasks')),
+        tasks: JSON.parse(localStorage.getItem('tasks'))||[],
     },
     mutations: {
         newTask(state, payload) {
-            payload.status = 'work'
-            payload.id = Math.floor(Math.random() * 1000)
             state.tasks.push(payload)
             recordData(state.tasks)
         },
@@ -22,8 +21,6 @@ export default {
                 }
             })
             recordData(state.tasks)
-
-
         },
 
 
